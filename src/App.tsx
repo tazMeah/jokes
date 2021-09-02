@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import { useState } from "react";
+import GetJoke from "./services/GetJoke";
+import joke from "./models/joke";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [joke, setJoke] = useState<joke>();
+	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		GetJoke().then((data) => {
+			setJoke(data);
+		});
+	}, [count]);
+
+	return (
+		<div className="App">
+			<p>{joke?.setup}</p>
+			<p>{joke?.punchline}</p>
+			<button
+				onClick={() => {
+					console.log(
+						"grand circus key: ",
+						process.env.REACT_APP_GRAND_CIRCUS_KEY
+					);
+					setCount((prv) => prv + 1);
+				}}
+			>
+				{count}
+			</button>
+		</div>
+	);
 }
 
 export default App;
